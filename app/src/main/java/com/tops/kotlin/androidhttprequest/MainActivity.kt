@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val apiToken =
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJkaGFybWluMjAwMkBnbWFpbC5jb20iLCJhcGlfdG9rZW4iOiJWTUJMTU50LVNDMWZUcXZySDIyNlZrekZjbUZvRDhSaW9XcTRlWXI5M2Y2cW9sQ1h4RTVyNkNHMXZIQnQ0endld09zIn0sImV4cCI6MTczMTg5NDg5Nn0.pAEpYaK8OuEjarMUh_8V-kD-FGYIbwitkBvF4QlLYas"
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJkaGFybWluMjgyMDAyQGdtYWlsLmNvbSIsImFwaV90b2tlbiI6Il80aGJzYmFlSlhyOWVJS3dwTG4tMFNaWS10Y0xxNnRzQnN5T3M2MzI4RnNSX2hWYW1tSmR2aV91dUlyYlRnSGRhbXcifSwiZXhwIjoxNzMxOTkxNzI5fQ.w9Ju0lp013spL3bO-X-Nnopcq7xuoxQnwiBdZ7LN-To"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
