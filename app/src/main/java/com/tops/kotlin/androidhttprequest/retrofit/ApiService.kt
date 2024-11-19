@@ -10,17 +10,17 @@ import retrofit2.http.Path
 
 interface ApiService {
     @GET("countries")
-    fun getCountries(@Header("Authorization") token: String): Call<List<Country>>
+    fun getCountries(@Header("Authorization") token: String): Call<MutableList<Country>>
 
     @GET("states/{country_name}")
     fun getStates(
         @Header("Authorization") token: String,
         @Path("country_name") countryName: String
-    ): Call<List<State>>
+    ): Call<MutableList<State>>
 
     @GET("cities/{state_name}")
     fun getCities(
         @Header("Authorization") token: String,
         @Path("state_name") stateName: String
-    ): Call<List<City>>
+    ): Call<MutableList<City>>
 }

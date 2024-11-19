@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.R
 import androidx.appcompat.app.AppCompatActivity
@@ -34,45 +35,31 @@ class MainActivity : AppCompatActivity() {
     private fun fetchCountries() {
         val apiService = RetrofitClient.getService(this)
 
-        apiService.getCountries(apiToken).enqueue(object : Callback<List<Country>> {
-            override fun onResponse(call: Call<List<Country>>, res: Response<List<Country>>) {
-                if (res.isSuccessful) {
-                    val countries = res.body() ?: emptyList()
-                    val countryNames = countries.map { it.country_name }
-
+        apiService.getCountries(apiToken).enqueue(object : Callback<MutableList<Country>> {
+            override fun onResponse(
+                call: Call<MutableList<Country>>,
+                res: Response<MutableList<Country>>
+            ) {
+                res.body()?.let {
                     val countryAdapter = ArrayAdapter(
                         this@MainActivity,
                         R.layout.support_simple_spinner_dropdown_item,
-                        countryNames
+                        it.map { country -> country.country_name }
                     )
-                    binding.countrySpinner.adapter = countryAdapter
+                    binding.countrySpinner.setAdapter(countryAdapter)
+                    binding.countrySpinner.setOnItemClickListener { adapterView, view, i, l ->
+                        val selectedCountryName = it[i].country_name
 
-                    binding.countrySpinner.onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(
-                                parent: AdapterView<*>?,
-                                view: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                val selectedCountryName = countries[position].country_name
-                                fetchStates(selectedCountryName)
-                            }
+                        // Reset state and city spinners
+                        setDefaultSpinnerHint(binding.stateSpinner, "Select State")
+                        setDefaultSpinnerHint(binding.citySpinner, "Select City")
 
-                            override fun onNothingSelected(parent: AdapterView<*>?) {
-                                // Handle case where nothing is selected
-                            }
-                        }
-                } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Failed to fetch countries",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        fetchStates(selectedCountryName)
+                    }
                 }
             }
 
-            override fun onFailure(call: Call<List<Country>>, t: Throwable) {
+            override fun onFailure(call: Call<MutableList<Country>>, t: Throwable) {
                 Toast.makeText(
                     this@MainActivity,
                     "Error: ${t.message}",
@@ -85,85 +72,74 @@ class MainActivity : AppCompatActivity() {
     private fun fetchStates(selectedCountryName: String) {
         val apiService = RetrofitClient.getService(this)
 
-        apiService.getStates(apiToken, selectedCountryName).enqueue(object : Callback<List<State>> {
-            override fun onResponse(call: Call<List<State>>, res: Response<List<State>>) {
-                if (res.isSuccessful) {
-                    val states = res.body() ?: emptyList()
-                    val stateNames = states.map { it.state_name }
+        apiService.getStates(apiToken, selectedCountryName)
+            .enqueue(object : Callback<MutableList<State>> {
+                override fun onResponse(
+                    call: Call<MutableList<State>>,
+                    res: Response<MutableList<State>>
+                ) {
+                    res.body()?.let {
+                        val stateAdapter = ArrayAdapter(
+                            this@MainActivity,
+                            R.layout.support_simple_spinner_dropdown_item,
+                            it.map { state -> state.state_name }
+                        )
+                        binding.stateSpinner.setAdapter(stateAdapter)
+                        binding.stateSpinner.setOnItemClickListener { adapterView, view, i, l ->
+                            val selectedStateName = it[i].state_name
 
-                    val stateAdapter = ArrayAdapter(
-                        this@MainActivity,
-                        R.layout.support_simple_spinner_dropdown_item,
-                        stateNames
-                    )
-                    binding.stateSpinner.adapter = stateAdapter
+                            // Reset city spinner
+                            setDefaultSpinnerHint(binding.citySpinner, "Select City")
 
-                    binding.stateSpinner.onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(
-                                parent: AdapterView<*>?,
-                                view: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                val selectedStateName = states[position].state_name
-                                fetchCities(selectedStateName)
-                            }
-
-                            override fun onNothingSelected(parent: AdapterView<*>?) {
-                                // Handle case where nothing is selected
-                            }
+                            fetchCities(selectedStateName)
                         }
-                } else {
+                    }
+                }
+
+                override fun onFailure(call: Call<MutableList<State>>, t: Throwable) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Failed to fetch states",
+                        "Error: ${t.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            }
-
-            override fun onFailure(call: Call<List<State>>, t: Throwable) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Error: ${t.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
+            })
     }
 
     private fun fetchCities(selectedStateName: String) {
         val apiService = RetrofitClient.getService(this)
 
-        apiService.getCities(apiToken, selectedStateName).enqueue(object : Callback<List<City>> {
-            override fun onResponse(call: Call<List<City>>, res: Response<List<City>>) {
-                if (res.isSuccessful) {
-                    val cities = res.body() ?: emptyList()
-                    val cityNames = cities.map { it.city_name }
+        apiService.getCities(apiToken, selectedStateName)
+            .enqueue(object : Callback<MutableList<City>> {
+                override fun onResponse(
+                    call: Call<MutableList<City>>,
+                    res: Response<MutableList<City>>
+                ) {
+                    res.body()?.let {
+                        val cityAdapter = ArrayAdapter(
+                            this@MainActivity,
+                            R.layout.support_simple_spinner_dropdown_item,
+                            it.map { city -> city.city_name }
+                        )
+                        binding.citySpinner.setAdapter(cityAdapter)
+                    }
+                }
 
-                    val cityAdapter = ArrayAdapter(
-                        this@MainActivity,
-                        R.layout.support_simple_spinner_dropdown_item,
-                        cityNames
-                    )
-                    binding.citySpinner.adapter = cityAdapter
-                } else {
+                override fun onFailure(call: Call<MutableList<City>>, t: Throwable) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Failed to fetch cities",
+                        "Error: ${t.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            }
-
-            override fun onFailure(call: Call<List<City>>, t: Throwable) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Error: ${t.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
+            })
     }
+
+    private fun setDefaultSpinnerHint(spinner: AutoCompleteTextView, hint: String) {
+        val hintAdapter =
+            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listOf(hint))
+        spinner.setAdapter(hintAdapter)
+        spinner.setText(hint, false) // Set the default hint text
+    }
+
 }
