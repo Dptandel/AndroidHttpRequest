@@ -1,8 +1,6 @@
 package com.tops.kotlin.androidhttprequest
 
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -22,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val apiToken =
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJkaGFybWluMjgyMDAyQGdtYWlsLmNvbSIsImFwaV90b2tlbiI6Il80aGJzYmFlSlhyOWVJS3dwTG4tMFNaWS10Y0xxNnRzQnN5T3M2MzI4RnNSX2hWYW1tSmR2aV91dUlyYlRnSGRhbXcifSwiZXhwIjoxNzMxOTkxNzI5fQ.w9Ju0lp013spL3bO-X-Nnopcq7xuoxQnwiBdZ7LN-To"
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJkaGFybWluMjgwNUBnbWFpbC5jb20iLCJhcGlfdG9rZW4iOiJFd3M4aXBpZE9KZFZWWTJSbGJzSFdGTlNhVUNqbGpFYUJjQTMtOU1Tc2luNTZnNzZURV94d284SUlvbEZpdTgxRmw4In0sImV4cCI6MTczMjUwODk0NX0.TL6TD5LEJ6eanHfM0tMZ3UUzsVOylg7gqSYIWRMm_0Y"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
